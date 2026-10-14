@@ -1,6 +1,6 @@
 # Stenius shell: the Taskboard frontend
 
-The Stenius shell is the Angular monorepo that holds the platform's browser apps. Its one real app, the Taskboard (`apps/taskboard`), is where clerks create, assign, complete and delete tasks: it talks to the Taskboard backend's REST API and shows, for every task, whether the IBM host, which stays the back office's system of record, has caught up with it. Bridge and Console are placeholder apps.
+The Stenius shell is the Angular monorepo that holds the platform's browser apps. Its one real app, the Taskboard (`apps/taskboard`), is where clerks create, edit, assign, complete and delete tasks: it talks to the Taskboard backend's REST API and shows, for every task, whether the IBM host, which stays the back office's system of record, has caught up with it. Bridge and Console are placeholder apps.
 
 ```mermaid
 flowchart LR
@@ -214,11 +214,11 @@ Try it:
 
 ## Testing
 
-`npm test` runs the unit tests of every app once (77 tests: 75 in the Taskboard and one per placeholder app). They run with Vitest in jsdom through the Angular CLI (`ng test`) and need neither a backend nor a browser:
+`npm test` runs the unit tests of every app once: the Taskboard's, and one trivial test per placeholder app. They run with Vitest in jsdom through the Angular CLI (`ng test`) and need neither a backend nor a browser:
 
 - `tasks/task-api.spec.ts`: every request of `TaskApi`, its method, URL and body, exactly as in the contract, against Angular's `HttpTestingController`; error responses keep their problem details.
 - `tasks/task-store.spec.ts`: refreshing, the unreachable state and its recovery, the assignee suggestions, every action and its request, dropping a refresh that a change has overtaken, and the message of a failed action.
-- `board/board.spec.ts`, `task-card/task-card.spec.ts`: columns and counts, the empty state, the badges and their tooltips, overdue highlighting, and the actions the components emit, including the assignee picker.
+- `board/board.spec.ts`, `task-card/task-card.spec.ts`: columns and counts, the empty state, the badges and their tooltips, overdue highlighting, the actions the components emit, including the assignee picker, and where the keyboard focus goes when a card closes its picker or changes columns.
 - `task-form/task-form.spec.ts`: the field limits, trimmed and nulled values, the bodies of create and edit, and the backend's validation errors on their fields.
 - `app.spec.ts`: the page with its real store: loading, the refresh every 10 seconds (fake timers) and on demand, the banner, and creating, editing, moving, assigning and deleting a task through the API.
 
