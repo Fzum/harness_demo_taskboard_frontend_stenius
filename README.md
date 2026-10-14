@@ -137,7 +137,7 @@ The form checks the limits of the host's task record (copybook TSKREC) before it
 | Field | Rule | Host field |
 |---|---|---|
 | Title | Required, 1 to 40 characters, not only spaces | `TSK-TITLE PIC X(40)` |
-| Description | Optional, up to 200 characters | `TSK-DESC PIC X(200)` |
+| Description | Optional, up to 200 characters; the backend stores it on one line, as the host keeps it, so line breaks become spaces | `TSK-DESC PIC X(200)` |
 | Assignee | Optional, a lower-case user id: `^[a-z][a-z0-9]{0,7}$` | `TSK-USER PIC X(8)`, upper case on the host |
 | Due date | Optional date | `TSK-DUE-DATE PIC 9(8)`, `00000000` for none |
 
