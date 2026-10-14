@@ -219,7 +219,7 @@ Try it:
 - `tasks/task-api.spec.ts`: every request of `TaskApi`, its method, URL and body, exactly as in the contract, against Angular's `HttpTestingController`; error responses keep their problem details.
 - `tasks/task-store.spec.ts`: refreshing, the unreachable state and its recovery, the assignee suggestions, every action and its request, dropping a refresh that a change has overtaken, and the message of a failed action.
 - `board/board.spec.ts`, `task-card/task-card.spec.ts`: columns and counts, the empty state, the badges and their tooltips, overdue highlighting, the actions the components emit, including the assignee picker, and where the keyboard focus goes when a card closes its picker or changes columns.
-- `task-form/task-form.spec.ts`: the field limits, trimmed and nulled values, the bodies of create and edit, and the backend's validation errors on their fields.
+- `task-form/task-form.spec.ts`: the field limits and the focus on the first field to correct, trimmed and nulled values, the bodies of create and edit, and the backend's validation errors on their fields.
 - `app.spec.ts`: the page with its real store: loading, the refresh every 10 seconds (fake timers) and on demand, the banner, and creating, editing, moving, assigning and deleting a task through the API.
 
 Specs sit next to the code they test; test data comes from `apps/taskboard/src/testing/tasks.ts`. jsdom has `<dialog>` elements but not their methods, so `testing/dialog-polyfill.ts` (a setup file in `angular.json`) adds `showModal()` and `close()`.
