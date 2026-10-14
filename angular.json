@@ -84,7 +84,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["apps/taskboard/**/*.ts", "apps/taskboard/**/*.html"],
-            "eslintConfig": "apps/taskboard/eslint.config.js"
+            "eslintConfig": "apps/taskboard/eslint.config.js",
+            "maxWarnings": 0
           }
         }
       }
@@ -163,7 +164,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["apps/bridge/**/*.ts", "apps/bridge/**/*.html"],
-            "eslintConfig": "apps/bridge/eslint.config.js"
+            "eslintConfig": "apps/bridge/eslint.config.js",
+            "maxWarnings": 0
           }
         }
       }
@@ -242,7 +244,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["apps/console/**/*.ts", "apps/console/**/*.html"],
-            "eslintConfig": "apps/console/eslint.config.js"
+            "eslintConfig": "apps/console/eslint.config.js",
+            "maxWarnings": 0
           }
         }
       }
