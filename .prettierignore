@@ -1,2 +1,4 @@
 # Written by npm; never formatted by hand.
 package-lock.json
+# Shares a section with the other Taskboard repositories that must stay byte-identical.
+README.md
