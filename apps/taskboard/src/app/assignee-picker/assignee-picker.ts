@@ -33,7 +33,14 @@ export class AssigneePicker {
   /** Emits the chosen user id, or null to unassign. */
   readonly picked = output<string | null>();
 
-  protected readonly id = `assignee-picker-${nextId++}`;
+  private readonly prefix = `assignee-picker-${nextId++}`;
+  /** Element ids, unique on the page. */
+  protected readonly ids = {
+    suggestions: `${this.prefix}-suggestions`,
+    userId: `${this.prefix}-user-id`,
+    error: `${this.prefix}-error`,
+  };
+
   protected readonly others = computed(() =>
     this.suggestions().filter((user) => user !== this.assignee()),
   );

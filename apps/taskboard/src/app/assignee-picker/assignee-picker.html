@@ -1,6 +1,6 @@
 @if (others().length > 0) {
-  <p class="picker__label" [id]="id + '-suggestions'">Assign to</p>
-  <ul class="picker__suggestions" [attr.aria-labelledby]="id + '-suggestions'">
+  <p class="picker__label" [id]="ids.suggestions">Assign to</p>
+  <ul class="picker__suggestions" [attr.aria-labelledby]="ids.suggestions">
     @for (user of others(); track user) {
       <li>
         <button type="button" class="picker__suggestion" (click)="picked.emit(user)">
@@ -12,7 +12,7 @@
 }
 
 <form class="picker__form" [formRoot]="userForm">
-  <label class="field__label" [for]="id + '-user-id'">
+  <label class="field__label" [for]="ids.userId">
     {{ others().length > 0 ? 'Or another user id' : 'User id' }}
   </label>
   <div class="picker__row">
@@ -23,15 +23,15 @@
       autocomplete="off"
       spellcheck="false"
       placeholder="e.g. amueller"
-      [id]="id + '-user-id'"
+      [id]="ids.userId"
       [formField]="userForm.userId"
       [attr.aria-invalid]="error() ? true : null"
-      [attr.aria-describedby]="error() ? id + '-error' : null"
+      [attr.aria-describedby]="error() ? ids.error : null"
     />
     <button type="submit" class="button button--small">Assign</button>
   </div>
   @if (error(); as error) {
-    <p class="field__error" [id]="id + '-error'">{{ error }}</p>
+    <p class="field__error" [id]="ids.error">{{ error }}</p>
   }
 </form>
 
