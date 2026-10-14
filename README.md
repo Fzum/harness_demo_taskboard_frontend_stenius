@@ -2,6 +2,8 @@
 
 The Stenius shell is the Angular monorepo that holds the platform's browser apps. Its one real app, the Taskboard (`apps/taskboard`), is where clerks create, edit, assign, complete and delete tasks: it talks to the Taskboard backend's REST API and shows, for every task, whether the IBM host, which stays the back office's system of record, has caught up with it. Bridge and Console are placeholder apps.
 
+![The Taskboard with the whole system running: tasks from the host and from the Taskboard in the columns Open, In progress and Done, each card with its source badge, host key and sync badge, one task overdue and one pending host sync](docs/taskboard.png)
+
 ```mermaid
 flowchart LR
     clerk([Clerk]) --> ui
