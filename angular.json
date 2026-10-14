@@ -60,7 +60,8 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "port": 4200
+            "port": 4200,
+            "proxyConfig": "apps/taskboard/proxy.conf.mjs"
           },
           "configurations": {
             "production": {
@@ -75,7 +76,8 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "runnerConfig": "vitest.config.mts"
+            "runnerConfig": "vitest.config.mts",
+            "setupFiles": ["apps/taskboard/src/testing/dialog-polyfill.ts"]
           }
         },
         "lint": {

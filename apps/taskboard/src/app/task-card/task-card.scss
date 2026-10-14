@@ -1,0 +1,172 @@
+.card {
+  display: grid;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 120ms;
+
+  &:hover {
+    box-shadow: var(--shadow-raised);
+  }
+
+  // A host inconsistency must catch the eye from across the room.
+  &[data-sync='FAILED'] {
+    border-color: #f0a19a;
+    box-shadow:
+      inset 4px 0 0 var(--color-danger),
+      var(--shadow-card);
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+
+  &__source {
+    &[data-source='HOST'] {
+      --badge-text: #5b21b6;
+      --badge-background: #efeafe;
+    }
+
+    &[data-source='TASKBOARD'] {
+      --badge-text: #1d4ed8;
+      --badge-background: #e3edff;
+    }
+  }
+
+  &__host-key {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-weight: 500;
+  }
+
+  &__sync {
+    &::before {
+      width: 0.5rem;
+      height: 0.5rem;
+      content: '';
+      background: currentcolor;
+      border-radius: 50%;
+    }
+
+    &[data-sync='PENDING'] {
+      --badge-text: #7c4a00;
+      --badge-background: #fff1d1;
+    }
+
+    &[data-sync='SYNCED'] {
+      --badge-text: #17663a;
+      --badge-background: #def5e7;
+    }
+
+    &[data-sync='FAILED'] {
+      --badge-text: #a1170d;
+      --badge-background: #fde3e1;
+    }
+  }
+
+  &__title {
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  &__description {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+  }
+
+  &__assignee {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 600;
+
+    &--none {
+      font-weight: 400;
+      font-style: italic;
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.8125rem;
+    color: #fff;
+    text-transform: uppercase;
+    background: #4b5a78;
+    border-radius: 50%;
+  }
+
+  &__due {
+    color: var(--color-text-muted);
+  }
+
+  &--overdue &__due {
+    font-weight: 600;
+    color: var(--color-danger);
+  }
+
+  &__overdue {
+    display: inline-block;
+    padding: 0 0.5rem;
+    margin-right: 0.125rem;
+    font-size: 0.75rem;
+    color: #fff;
+    background: var(--color-danger);
+    border-radius: 999px;
+  }
+
+  // Two groups that wrap as a whole: moves on the left, the other actions on the right.
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    margin: 0 -0.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__moves,
+  &__tools {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  &__tools {
+    margin-left: auto;
+  }
+
+  &__assign[aria-expanded='true'] {
+    color: var(--color-text);
+    background: var(--color-sunken);
+  }
+
+  &__delete:hover {
+    color: var(--color-danger);
+    background: #fdeceb;
+  }
+}

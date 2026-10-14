@@ -1,0 +1,16 @@
+<dialog
+  #dialog
+  class="dialog dialog--small"
+  aria-labelledby="confirm-dialog-heading"
+  aria-describedby="confirm-dialog-message"
+  (close)="closed.emit()"
+>
+  <h2 class="dialog__heading" id="confirm-dialog-heading">{{ heading() }}</h2>
+  <p id="confirm-dialog-message"><ng-content /></p>
+  <div class="dialog__actions">
+    <button type="button" class="button" (click)="dialog.close()">Cancel</button>
+    <button type="button" class="button button--danger" (click)="confirm()">
+      {{ confirmLabel() }}
+    </button>
+  </div>
+</dialog>

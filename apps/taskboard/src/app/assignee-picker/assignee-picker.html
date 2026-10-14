@@ -1,0 +1,42 @@
+@if (others().length > 0) {
+  <p class="picker__label" [id]="id + '-suggestions'">Assign to</p>
+  <ul class="picker__suggestions" [attr.aria-labelledby]="id + '-suggestions'">
+    @for (user of others(); track user) {
+      <li>
+        <button type="button" class="picker__suggestion" (click)="picked.emit(user)">
+          {{ user }}
+        </button>
+      </li>
+    }
+  </ul>
+}
+
+<form class="picker__form" [formRoot]="userForm">
+  <label class="field__label" [for]="id + '-user-id'">
+    {{ others().length > 0 ? 'Or another user id' : 'User id' }}
+  </label>
+  <div class="picker__row">
+    <input
+      #userIdInput
+      class="field__input"
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="e.g. amueller"
+      [id]="id + '-user-id'"
+      [formField]="userForm.userId"
+      [attr.aria-invalid]="error() ? true : null"
+      [attr.aria-describedby]="error() ? id + '-error' : null"
+    />
+    <button type="submit" class="button button--small">Assign</button>
+  </div>
+  @if (error(); as error) {
+    <p class="field__error" [id]="id + '-error'">{{ error }}</p>
+  }
+</form>
+
+@if (assignee(); as assignee) {
+  <button type="button" class="button button--small button--ghost" (click)="picked.emit(null)">
+    Unassign {{ assignee }}
+  </button>
+}

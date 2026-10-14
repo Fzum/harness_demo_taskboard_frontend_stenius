@@ -1,0 +1,109 @@
+<article
+  class="card"
+  [class.card--overdue]="overdue()"
+  [attr.data-sync]="task().syncStatus"
+  [attr.aria-labelledby]="ids().title"
+>
+  <div class="card__badges">
+    <span class="tooltip">
+      <span
+        class="badge card__source"
+        tabindex="0"
+        [attr.data-source]="task().source"
+        [attr.aria-describedby]="ids().source"
+      >
+        {{ source().text }}
+        @if (task().hostId; as hostId) {
+          <span class="card__host-key">{{ hostId }}</span>
+        }
+      </span>
+      <span class="tooltip__text" role="tooltip" [id]="ids().source">{{ source().tooltip }}</span>
+    </span>
+    <span class="tooltip tooltip--end">
+      <span
+        class="badge card__sync"
+        tabindex="0"
+        [attr.data-sync]="task().syncStatus"
+        [attr.aria-describedby]="ids().sync"
+      >
+        {{ sync().text }}
+      </span>
+      <span class="tooltip__text" role="tooltip" [id]="ids().sync">{{ sync().tooltip }}</span>
+    </span>
+  </div>
+
+  <h3 class="card__title" [id]="ids().title">{{ task().title }}</h3>
+  @if (task().description; as description) {
+    <p class="card__description">{{ description }}</p>
+  }
+
+  <div class="card__meta">
+    @if (task().assignee; as assignee) {
+      <span class="card__assignee">
+        <span class="card__avatar" aria-hidden="true">{{ assignee.charAt(0) }}</span>
+        <span class="card__assignee-name">{{ assignee }}</span>
+      </span>
+    } @else {
+      <span class="card__assignee card__assignee--none">Unassigned</span>
+    }
+    @if (task().dueDate; as dueDate) {
+      <span class="card__due">
+        @if (overdue()) {
+          <span class="card__overdue">Overdue</span>
+        }
+        Due <time [attr.datetime]="dueDate">{{ dueDate | date: 'mediumDate' }}</time>
+      </span>
+    }
+  </div>
+
+  <div class="card__actions" role="group" [attr.aria-labelledby]="ids().title">
+    <div class="card__moves">
+      @for (target of moves(); track target.status) {
+        <button
+          type="button"
+          class="button button--small button--ghost"
+          [attr.aria-label]="'Move to ' + target.label"
+          (click)="move.emit(target.status)"
+        >
+          @if (target.back) {
+            <span aria-hidden="true">←</span>
+          }
+          {{ target.label }}
+          @if (!target.back) {
+            <span aria-hidden="true">→</span>
+          }
+        </button>
+      }
+    </div>
+    <div class="card__tools">
+      <button
+        type="button"
+        class="button button--small button--ghost card__assign"
+        [attr.aria-expanded]="picking()"
+        [attr.aria-controls]="picking() ? ids().picker : null"
+        (click)="picking.set(!picking())"
+      >
+        {{ task().assignee ? 'Reassign' : 'Assign' }}
+      </button>
+      <button type="button" class="button button--small button--ghost" (click)="edit.emit()">
+        Edit
+      </button>
+      <button
+        type="button"
+        class="button button--small button--ghost card__delete"
+        (click)="delete.emit()"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+
+  @if (picking()) {
+    <app-assignee-picker
+      [attr.id]="ids().picker"
+      [assignee]="task().assignee"
+      [suggestions]="assignees()"
+      (picked)="pick($event)"
+    />
+  }
+</article>

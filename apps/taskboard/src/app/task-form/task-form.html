@@ -1,0 +1,134 @@
+<dialog #dialog class="dialog" aria-labelledby="task-form-heading" (close)="closed.emit()">
+  <form class="task-form" [formRoot]="taskForm">
+    <h2 class="dialog__heading" id="task-form-heading">{{ task() ? 'Edit task' : 'New task' }}</h2>
+
+    @for (error of taskForm().errors(); track $index) {
+      <p class="alert" role="alert">{{ error.message }}</p>
+    }
+
+    @let titleError = errorOf(taskForm.title);
+    @let titleLength = taskForm.title().value().length;
+    <div class="field">
+      <label class="field__label" for="task-title">Title</label>
+      <input
+        id="task-title"
+        class="field__input"
+        type="text"
+        autocomplete="off"
+        aria-describedby="task-title-meta"
+        [formField]="taskForm.title"
+        [attr.aria-invalid]="titleError ? true : null"
+      />
+      <div class="field__meta" id="task-title-meta">
+        @if (titleError) {
+          <span class="field__error">{{ titleError }}</span>
+        }
+        <span class="field__count" [class.field__count--over]="titleLength > titleMaxLength">
+          {{ titleLength }} / {{ titleMaxLength }}
+        </span>
+      </div>
+    </div>
+
+    @let descriptionError = errorOf(taskForm.description);
+    @let descriptionLength = taskForm.description().value().length;
+    <div class="field">
+      <label class="field__label" for="task-description">
+        Description <span class="field__optional">(optional)</span>
+      </label>
+      <textarea
+        id="task-description"
+        class="field__input"
+        rows="3"
+        aria-describedby="task-description-meta"
+        [formField]="taskForm.description"
+        [attr.aria-invalid]="descriptionError ? true : null"
+      ></textarea>
+      <div class="field__meta" id="task-description-meta">
+        @if (descriptionError) {
+          <span class="field__error">{{ descriptionError }}</span>
+        }
+        <span
+          class="field__count"
+          [class.field__count--over]="descriptionLength > descriptionMaxLength"
+        >
+          {{ descriptionLength }} / {{ descriptionMaxLength }}
+        </span>
+      </div>
+    </div>
+
+    <div class="task-form__row">
+      @let assigneeError = errorOf(taskForm.assignee);
+      <div class="field">
+        <label class="field__label" for="task-assignee">
+          Assignee <span class="field__optional">(optional)</span>
+        </label>
+        <input
+          id="task-assignee"
+          class="field__input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="e.g. amueller"
+          list="task-assignee-suggestions"
+          [formField]="taskForm.assignee"
+          [attr.aria-invalid]="assigneeError ? true : null"
+          [attr.aria-describedby]="assigneeError ? 'task-assignee-error' : null"
+        />
+        <datalist id="task-assignee-suggestions">
+          @for (assignee of assignees(); track assignee) {
+            <option [value]="assignee"></option>
+          }
+        </datalist>
+        @if (assigneeError) {
+          <p class="field__error" id="task-assignee-error">{{ assigneeError }}</p>
+        }
+      </div>
+
+      @let dueDateError = errorOf(taskForm.dueDate);
+      <div class="field">
+        <label class="field__label" for="task-due-date">
+          Due date <span class="field__optional">(optional)</span>
+        </label>
+        <input
+          id="task-due-date"
+          class="field__input"
+          type="date"
+          [formField]="taskForm.dueDate"
+          [attr.aria-invalid]="dueDateError ? true : null"
+          [attr.aria-describedby]="dueDateError ? 'task-due-date-error' : null"
+        />
+        @if (dueDateError) {
+          <p class="field__error" id="task-due-date-error">{{ dueDateError }}</p>
+        }
+      </div>
+    </div>
+
+    @if (task()) {
+      @let statusError = errorOf(taskForm.status);
+      <div class="field">
+        <label class="field__label" for="task-status">Status</label>
+        <select
+          id="task-status"
+          class="field__input"
+          [formField]="taskForm.status"
+          [attr.aria-invalid]="statusError ? true : null"
+          [attr.aria-describedby]="statusError ? 'task-status-error' : null"
+        >
+          @for (option of statuses; track option.status) {
+            <option [value]="option.status">{{ option.label }}</option>
+          }
+        </select>
+        @if (statusError) {
+          <p class="field__error" id="task-status-error">{{ statusError }}</p>
+        }
+      </div>
+    }
+
+    <div class="dialog__actions">
+      <button type="button" class="button" (click)="dialog.close()">Cancel</button>
+      <button type="submit" class="button button--primary" [disabled]="taskForm().submitting()">
+        {{ taskForm().submitting() ? 'Saving…' : task() ? 'Save changes' : 'Create task' }}
+      </button>
+    </div>
+  </form>
+</dialog>

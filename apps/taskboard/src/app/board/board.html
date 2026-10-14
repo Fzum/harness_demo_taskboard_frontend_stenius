@@ -1,0 +1,42 @@
+@if (tasks().length === 0) {
+  <section class="empty" aria-labelledby="board-empty-heading">
+    <h2 class="empty__heading" id="board-empty-heading">No tasks yet</h2>
+    <p class="empty__text">
+      Create the first one, or wait for the datasync: its next ETL run loads the host's tasks, and
+      they show up here by themselves.
+    </p>
+    <button type="button" class="button button--primary" (click)="create.emit()">New task</button>
+  </section>
+} @else {
+  <div class="board">
+    @for (column of columns(); track column.status) {
+      <section
+        class="column"
+        [attr.data-status]="column.status"
+        [attr.aria-labelledby]="'column-' + column.status"
+      >
+        <h2 class="column__heading" [id]="'column-' + column.status">
+          {{ column.label }}
+          <span class="column__count">{{ column.tasks.length }}</span>
+          <span class="visually-hidden"> {{ column.tasks.length === 1 ? 'task' : 'tasks' }}</span>
+        </h2>
+        <ul class="column__tasks">
+          @for (task of column.tasks; track task.id) {
+            <li>
+              <app-task-card
+                [task]="task"
+                [assignees]="assignees()"
+                (edit)="edit.emit(task)"
+                (move)="move.emit({ task, status: $event })"
+                (assign)="assign.emit({ task, assignee: $event })"
+                (delete)="delete.emit(task)"
+              />
+            </li>
+          } @empty {
+            <li class="column__empty">Nothing here</li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+}
