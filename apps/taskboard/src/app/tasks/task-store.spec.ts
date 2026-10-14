@@ -173,7 +173,7 @@ describe('TaskStore', () => {
         { status: 404, statusText: 'Not Found' },
       );
 
-    expect(store.error()).toBe('Could not delete "Check address change": Task 1 does not exist');
+    expect(store.error()).toBe('Could not delete “Check address change”: Task 1 does not exist');
     http.expectOne({ method: 'GET', url: '/api/tasks' }).flush(boardTasks.slice(1));
     expect(store.tasks()).toHaveLength(3);
 
@@ -191,7 +191,7 @@ describe('TaskStore', () => {
     http.expectOne('/api/tasks').error(new ProgressEvent('error'));
 
     expect(store.error()).toBe(
-      'Could not assign "Archive closed case file" to amueller: the backend is unreachable',
+      'Could not assign “Archive closed case file” to amueller: the backend is unreachable',
     );
     expect(store.unreachable()).toBe(true);
   });
@@ -206,7 +206,7 @@ describe('TaskStore', () => {
     http.expectOne('/api/tasks').flush('', { status: 502, statusText: 'Bad Gateway' });
 
     expect(store.error()).toBe(
-      'Could not move "Archive closed case file" to Done: the backend is unreachable',
+      'Could not move “Archive closed case file” to Done: the backend is unreachable',
     );
     expect(store.unreachable()).toBe(true);
   });
@@ -221,7 +221,7 @@ describe('TaskStore', () => {
     http.expectOne({ method: 'GET', url: '/api/tasks' }).flush(boardTasks);
 
     expect(store.error()).toBe(
-      'Could not delete "Archive closed case file": the backend answered with status 500',
+      'Could not delete “Archive closed case file”: the backend answered with status 500',
     );
   });
 });

@@ -72,7 +72,7 @@ export class TaskStore {
     this.api.update(task.id, { title, description, status, assignee, dueDate }).subscribe({
       next: (moved) => this.upsert(moved),
       error: (error: unknown) =>
-        this.fail(`Could not move "${task.title}" to ${STATUS_LABELS[status]}`, error),
+        this.fail(`Could not move “${task.title}” to ${STATUS_LABELS[status]}`, error),
     });
   }
 
@@ -83,8 +83,8 @@ export class TaskStore {
       error: (error: unknown) =>
         this.fail(
           assignee
-            ? `Could not assign "${task.title}" to ${assignee}`
-            : `Could not unassign "${task.title}"`,
+            ? `Could not assign “${task.title}” to ${assignee}`
+            : `Could not unassign “${task.title}”`,
           error,
         ),
     });
@@ -93,7 +93,7 @@ export class TaskStore {
   delete(task: Task): void {
     this.api.delete(task.id).subscribe({
       next: () => this.apply((tasks) => tasks.filter(({ id }) => id !== task.id)),
-      error: (error: unknown) => this.fail(`Could not delete "${task.title}"`, error),
+      error: (error: unknown) => this.fail(`Could not delete “${task.title}”`, error),
     });
   }
 

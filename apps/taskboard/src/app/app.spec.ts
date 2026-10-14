@@ -234,7 +234,7 @@ describe('App', () => {
     answerRefresh(boardTasks.filter(({ id }) => id !== 2));
 
     expect(texts(page, '[role="alert"]')).toEqual([
-      'Could not move "Send payment reminder" to Done: Task 2 does not exist Dismiss',
+      'Could not move “Send payment reminder” to Done: Task 2 does not exist Dismiss',
     ]);
     expect(titlesIn('IN_PROGRESS')).toEqual([]);
 
