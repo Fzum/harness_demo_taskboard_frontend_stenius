@@ -16,14 +16,15 @@
   --color-text-muted: #576074;
   --color-primary: #2f5ae0;
   --color-primary-hover: #2449bd;
-  --color-focus: #8fb0ff;
+  // At least 3:1 against every background it surrounds (WCAG 1.4.11).
+  --color-focus: #3b6fe0;
   --color-danger: #c4291c;
   --color-danger-hover: #a32116;
 
-  // One colour per board column.
+  // One colour per board column, dark enough for the white count on it (4.5:1).
   --color-open: #3b6fe0;
-  --color-in-progress: #d98a00;
-  --color-done: #1f9254;
+  --color-in-progress: #a86400;
+  --color-done: #1a7f47;
 
   --radius-small: 6px;
   --radius: 10px;
