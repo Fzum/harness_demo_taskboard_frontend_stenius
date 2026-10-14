@@ -1,11 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 
+/** The only page of the Bridge app so far: a placeholder in the Stenius shell. */
 @Component({
-  imports: [],
   selector: 'app-root',
-  styleUrl: './app.scss',
   templateUrl: './app.html',
+  styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('bridge');
-}
+export class App {}

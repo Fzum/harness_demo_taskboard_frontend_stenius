@@ -1,0 +1,24 @@
+.placeholder {
+  display: grid;
+  gap: 0.5rem;
+  place-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+
+  &__shell {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #576074;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__title {
+    font-size: 3rem;
+  }
+
+  &__text {
+    color: #576074;
+  }
+}
