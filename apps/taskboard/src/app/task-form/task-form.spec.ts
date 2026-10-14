@@ -132,6 +132,17 @@ describe('TaskForm', () => {
       expect(closed).not.toHaveBeenCalled();
     });
 
+    it('takes the focus to the first field to correct', async () => {
+      const { fixture, element } = render();
+
+      typeInto(element, '#task-title', 'Request missing signature');
+      typeInto(element, '#task-assignee', 'A.Mueller');
+      button(element, 'Create task').click();
+      await settle(fixture);
+
+      expect(document.activeElement).toBe(find(element, '#task-assignee'));
+    });
+
     it('takes values right at the limits', () => {
       const { fixture, element } = render();
 

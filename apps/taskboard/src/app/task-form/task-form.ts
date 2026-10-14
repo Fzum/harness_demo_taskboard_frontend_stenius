@@ -97,7 +97,11 @@ export class TaskForm {
     };
   });
   protected readonly taskForm = form(this.model, taskSchema, {
-    submission: { action: () => this.save() },
+    submission: {
+      action: () => this.save(),
+      // Takes the user, and a screen reader, to the first field to correct.
+      onInvalid: (task) => task().errorSummary()[0]?.fieldTree().focusBoundControl(),
+    },
   });
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
