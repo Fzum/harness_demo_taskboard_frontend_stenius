@@ -24,8 +24,10 @@
           @for (task of column.tasks; track task.id) {
             <li>
               <app-task-card
+                #card
                 [task]="task"
                 [assignees]="assignees()"
+                (focusin)="noteFocus(card)"
                 (edit)="edit.emit(task)"
                 (move)="move.emit({ task, status: $event })"
                 (assign)="assign.emit({ task, assignee: $event })"

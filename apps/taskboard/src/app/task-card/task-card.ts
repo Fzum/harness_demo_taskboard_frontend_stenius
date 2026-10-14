@@ -49,6 +49,7 @@ export class TaskCard {
   /** Whether the assignee picker is open. */
   protected readonly picking = signal(false);
   private readonly assignToggle = viewChild.required<ElementRef<HTMLButtonElement>>('assignToggle');
+  private readonly article = viewChild.required<ElementRef<HTMLElement>>('article');
 
   /** Element ids, unique on the board because every task appears once. */
   protected readonly ids = computed(() => {
@@ -93,6 +94,11 @@ export class TaskCard {
   protected pick(assignee: string | null): void {
     this.closePicker();
     this.assign.emit(assignee);
+  }
+
+  /** Moves the focus to the card as a whole, for example once its task has changed columns. */
+  focus(): void {
+    this.article().nativeElement.focus();
   }
 
   /** Closes the assignee picker and gives the focus back to the button that opened it. */

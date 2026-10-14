@@ -88,4 +88,35 @@ describe('Board', () => {
     expect(deleted).toEqual([first]);
     expect(assigned).toEqual([{ task: first, assignee: 'amueller' }]);
   });
+
+  describe('when a task changes columns', () => {
+    function moveFirstTaskToDone(fixture: ComponentFixture<Board>): void {
+      const [first, ...others] = boardTasks;
+      fixture.componentRef.setInput('tasks', [{ ...first, status: 'DONE' }, ...others]);
+      fixture.detectChanges();
+    }
+
+    it('hands the focus in its card on to its new card', () => {
+      const fixture = render(boardTasks);
+      find(column(fixture, 'OPEN'), 'button[aria-label="Move to Done"]').focus();
+
+      moveFirstTaskToDone(fixture);
+
+      expect(document.activeElement).toBe(
+        find(column(fixture, 'DONE'), 'article[aria-labelledby="task-1-title"]'),
+      );
+    });
+
+    it('leaves the focus alone once it has left the card', () => {
+      const fixture = render(boardTasks);
+      find(column(fixture, 'OPEN'), 'button[aria-label="Move to Done"]').focus();
+      const elsewhere = document.body.appendChild(document.createElement('button'));
+      onTestFinished(() => elsewhere.remove());
+      elsewhere.focus();
+
+      moveFirstTaskToDone(fixture);
+
+      expect(document.activeElement).toBe(elsewhere);
+    });
+  });
 });

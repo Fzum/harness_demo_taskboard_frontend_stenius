@@ -1,5 +1,7 @@
 <article
+  #article
   class="card"
+  tabindex="-1"
   [class.card--overdue]="overdue()"
   [attr.data-sync]="task().syncStatus"
   [attr.aria-labelledby]="ids().title"
