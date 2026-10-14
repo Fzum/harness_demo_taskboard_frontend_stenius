@@ -31,7 +31,7 @@ The highlighted node is this repository. The backend owns the tasks and writes a
 
 ## Quickstart
 
-You need Node.js 22.22.3 or later, 24.15 or later, or 26 or later (the versions Angular 22 supports) with npm. Nothing else: the unit tests run in jsdom, not in a browser.
+You need Node.js 22 (22.22.3 or later), 24 (24.15 or later) or 26 and later, the versions Angular 22 supports, with npm. Nothing else: the unit tests run in jsdom, not in a browser.
 
 ```sh
 npm ci          # install the locked dependencies
@@ -72,7 +72,7 @@ The shell is an Angular CLI workspace named `stenius` whose `apps/` folder holds
 ### Adding an app
 
 1. Generate it, here as `reports`: `npx ng generate application reports --style scss --ssr=false --routing=false`. The workspace's schematic collection (angular-eslint) gives the new app its `eslint.config.js` and lint target, and it gets a Vitest test target like the others.
-2. In `angular.json`, give `reports.architect.serve.options` a free port (`"port": 4203`) and set `reports.architect.test.options` to `{ "runnerConfig": "vitest.config.mts" }`.
+2. In `angular.json`, give `reports.architect.serve.options` a free port (`"port": 4203`), set `reports.architect.test.options` to `{ "runnerConfig": "vitest.config.mts" }` and add `"maxWarnings": 0` to `reports.architect.lint.options`.
 3. In `package.json`, add `"start:reports": "ng serve reports"` and append `&& ng build reports` to the `build` script. `npm test` and `npm run lint` run every app by themselves.
 
 ## The Taskboard
@@ -232,14 +232,14 @@ npx ng test taskboard --watch=false --include='**/task-card.spec.ts'
 npx ng test taskboard --watch=false --filter='sync status'
 ```
 
-Without `--watch=false`, `ng test` keeps watching and reruns the tests on every change.
+In a terminal, `ng test` without `--watch=false` keeps watching and reruns the tests on every change.
 
 ## Conventions
 
-- `npm run lint` must pass without errors or warnings; it uses angular-eslint's recommended and accessibility rules.
+- `npm run lint` fails on any error or warning (`maxWarnings: 0`). It applies the recommended rules of ESLint, typescript-eslint and angular-eslint, including angular-eslint's accessibility rules for templates.
 - `npm run format` formats everything with Prettier (100 columns, single quotes), `npm run format:check` only checks; `.editorconfig` holds the editor settings. `README.md` is left out of Prettier because its section "Run the whole Taskboard system locally" has to stay identical in all three repositories.
 - Angular as the CLI generates it today: standalone components, OnPush, signals, `inject()`, the built-in control flow, and file names after the 2025 style guide (`task-card.ts` holds `TaskCard`).
-- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/), with the app as the scope where there is one: `feat(taskboard): filter the board by assignee`, `fix(console): ...`, `build: ...`, `docs: ...`.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/), with the app as the scope where there is one, for example `feat(taskboard): filter the board by assignee`, `fix(bridge): show the page title in the browser tab`, `build: update Angular to 22.3` or `docs: explain the sync badges`.
 
 ## About this repository
 
