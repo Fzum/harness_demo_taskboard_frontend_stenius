@@ -214,7 +214,7 @@ Try it:
 
 ## Testing
 
-`npm test` runs the unit tests of every app once (75 tests: 73 in the Taskboard and one per placeholder app). They run with Vitest in jsdom through the Angular CLI (`ng test`) and need neither a backend nor a browser:
+`npm test` runs the unit tests of every app once (77 tests: 75 in the Taskboard and one per placeholder app). They run with Vitest in jsdom through the Angular CLI (`ng test`) and need neither a backend nor a browser:
 
 - `tasks/task-api.spec.ts`: every request of `TaskApi`, its method, URL and body, exactly as in the contract, against Angular's `HttpTestingController`; error responses keep their problem details.
 - `tasks/task-store.spec.ts`: refreshing, the unreachable state and its recovery, the assignee suggestions, every action and its request, dropping a refresh that a change has overtaken, and the message of a failed action.

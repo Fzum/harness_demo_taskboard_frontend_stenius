@@ -19,6 +19,12 @@ export function problemDetailsOf(error: unknown): ProblemDetails | null {
   return null;
 }
 
+/**
+ * Statuses of a request that did not reach a working backend: no connection at all (0), or the
+ * answer of a proxy in between, such as the dev server's 502 while the backend is down.
+ */
+const UNREACHABLE_STATUSES = [0, 502, 503, 504];
+
 /** Why a request failed, in a few words that fit after "Could not ...: ". */
 export function reasonOf(error: unknown): string {
   const problem = problemDetailsOf(error);
@@ -26,7 +32,7 @@ export function reasonOf(error: unknown): string {
     return problem.detail;
   }
   if (error instanceof HttpErrorResponse) {
-    return error.status === 0
+    return UNREACHABLE_STATUSES.includes(error.status)
       ? 'the backend is unreachable'
       : `the backend answered with status ${error.status}`;
   }

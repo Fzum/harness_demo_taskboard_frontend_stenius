@@ -195,4 +195,33 @@ describe('TaskStore', () => {
     );
     expect(store.unreachable()).toBe(true);
   });
+
+  it('takes a bad gateway, as the dev server answers while the backend is down, as unreachable', () => {
+    load();
+
+    store.move(unassignedTask, 'DONE');
+    http
+      .expectOne({ method: 'PUT', url: '/api/tasks/3' })
+      .flush('', { status: 502, statusText: 'Bad Gateway' });
+    http.expectOne('/api/tasks').flush('', { status: 502, statusText: 'Bad Gateway' });
+
+    expect(store.error()).toBe(
+      'Could not move "Archive closed case file" to Done: the backend is unreachable',
+    );
+    expect(store.unreachable()).toBe(true);
+  });
+
+  it('names the status of an error response without problem details', () => {
+    load();
+
+    store.delete(unassignedTask);
+    http
+      .expectOne({ method: 'DELETE', url: '/api/tasks/3' })
+      .flush('', { status: 500, statusText: 'Internal Server Error' });
+    http.expectOne({ method: 'GET', url: '/api/tasks' }).flush(boardTasks);
+
+    expect(store.error()).toBe(
+      'Could not delete "Archive closed case file": the backend answered with status 500',
+    );
+  });
 });
