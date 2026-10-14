@@ -35,11 +35,18 @@ The highlighted node is this repository. The backend owns the tasks and writes a
 
 You need Node.js 22 (22.22.3 or later), 24 (24.15 or later) or 26 and later, the versions Angular 22 supports, with npm. Nothing else: the unit tests run in jsdom, not in a browser.
 
+Install the locked dependencies, run the unit tests of all apps once, and make the production builds of all apps into `dist/<app>`:
+
 ```sh
-npm ci          # install the locked dependencies
-npm test        # unit tests of all apps, once
-npm run build   # production builds of all apps into dist/<app>
-npm start       # the Taskboard on http://localhost:4200
+npm ci
+npm test
+npm run build
+```
+
+Serve the Taskboard on http://localhost:4200:
+
+```sh
+npm start
 ```
 
 `npm start` forwards the app's `/api` requests to the Taskboard backend on http://localhost:8080. Without a backend the board shows its "unreachable" banner; to use another backend, for example a stub, set `TASKBOARD_API_URL`:
