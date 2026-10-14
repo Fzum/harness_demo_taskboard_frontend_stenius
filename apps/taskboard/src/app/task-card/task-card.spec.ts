@@ -172,17 +172,34 @@ describe('TaskCard', () => {
     });
 
     it('assigns a suggested user with one click and closes the picker', () => {
-      const { fixture, assigned, element } = open(aTask({ assignee: null }), ['bweber']);
+      const { fixture, assigned, toggle, element } = open(aTask({ assignee: null }), ['bweber']);
+      const suggestion = button(element, 'bweber');
 
-      button(element, 'bweber').click();
+      suggestion.focus();
+      suggestion.click();
       fixture.detectChanges();
 
       expect(assigned).toEqual(['bweber']);
       expect(element.querySelector('app-assignee-picker')).toBeNull();
+      expect(document.activeElement).toBe(toggle);
+    });
+
+    it('closes the picker on Escape without assigning anybody', () => {
+      const { fixture, assigned, toggle, element } = open(aTask({ assignee: null }), ['bweber']);
+
+      find(element, 'app-assignee-picker input').dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+      fixture.detectChanges();
+
+      expect(element.querySelector('app-assignee-picker')).toBeNull();
+      expect(toggle.getAttribute('aria-expanded')).toBe('false');
+      expect(document.activeElement).toBe(toggle);
+      expect(assigned).toEqual([]);
     });
 
     it('assigns another user id only once it is a valid user id', async () => {
-      const { fixture, assigned, element } = open(aTask({ assignee: null }), []);
+      const { fixture, assigned, toggle, element } = open(aTask({ assignee: null }), []);
       const picker = find(element, 'app-assignee-picker');
 
       typeInto(picker, 'input', 'B.Weber');
@@ -199,6 +216,7 @@ describe('TaskCard', () => {
       await fixture.whenStable();
 
       expect(assigned).toEqual(['bweber2']);
+      expect(document.activeElement).toBe(toggle);
     });
 
     it('unassigns the current assignee', () => {

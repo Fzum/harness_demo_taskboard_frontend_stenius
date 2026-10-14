@@ -1,5 +1,5 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
 
 import { AssigneePicker } from '../assignee-picker/assignee-picker';
 import { STATUS_LABELS, SyncStatus, Task, TASK_STATUSES, TaskStatus } from '../tasks/task';
@@ -48,6 +48,7 @@ export class TaskCard {
 
   /** Whether the assignee picker is open. */
   protected readonly picking = signal(false);
+  private readonly assignToggle = viewChild.required<ElementRef<HTMLButtonElement>>('assignToggle');
 
   /** Element ids, unique on the board because every task appears once. */
   protected readonly ids = computed(() => {
@@ -90,8 +91,14 @@ export class TaskCard {
   });
 
   protected pick(assignee: string | null): void {
-    this.picking.set(false);
+    this.closePicker();
     this.assign.emit(assignee);
+  }
+
+  /** Closes the assignee picker and gives the focus back to the button that opened it. */
+  protected closePicker(): void {
+    this.picking.set(false);
+    this.assignToggle().nativeElement.focus();
   }
 }
 

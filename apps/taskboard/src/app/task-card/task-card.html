@@ -77,6 +77,7 @@
     </div>
     <div class="card__tools">
       <button
+        #assignToggle
         type="button"
         class="button button--small button--ghost card__assign"
         [attr.aria-expanded]="picking()"
@@ -104,6 +105,7 @@
       [assignee]="task().assignee"
       [suggestions]="assignees()"
       (picked)="pick($event)"
+      (keydown.escape)="closePicker()"
     />
   }
 </article>
