@@ -201,14 +201,17 @@ describe('TaskCard', () => {
     it('assigns another user id only once it is a valid user id', async () => {
       const { fixture, assigned, toggle, element } = open(aTask({ assignee: null }), []);
       const picker = find(element, 'app-assignee-picker');
+      const submit = find(picker, 'button[type="submit"]');
 
       typeInto(picker, 'input', 'B.Weber');
-      find(picker, 'button[type="submit"]').click();
+      submit.focus();
+      submit.click();
       await fixture.whenStable();
       fixture.detectChanges();
 
       expect(textOf(find(picker, '.field__error'))).toBe(ASSIGNEE_HINT);
       expect(find(picker, 'input').getAttribute('aria-invalid')).toBe('true');
+      expect(document.activeElement).toBe(find(picker, 'input'));
       expect(assigned).toEqual([]);
 
       typeInto(picker, 'input', 'bweber2');

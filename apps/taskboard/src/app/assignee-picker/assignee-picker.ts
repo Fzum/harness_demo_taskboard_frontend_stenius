@@ -52,7 +52,12 @@ export class AssigneePicker {
       required(path.userId, { message: 'Enter a user id.' });
       pattern(path.userId, ASSIGNEE_PATTERN, { message: ASSIGNEE_HINT });
     },
-    { submission: { action: async () => this.picked.emit(this.model().userId) } },
+    {
+      submission: {
+        action: async () => this.picked.emit(this.model().userId),
+        onInvalid: (picker) => picker.userId().focusBoundControl(),
+      },
+    },
   );
 
   /** The user id field's first error, once the user has left the field or submitted. */
