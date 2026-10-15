@@ -9,11 +9,21 @@ import { NewTask, Task, TaskUpdate } from './task';
  * backend, and in production the same reverse proxy serves both.
  */
 export const TASKS_URL = '/api/tasks';
+export const VERSION_URL = '/api/version';
+
+/** The running backend build version. */
+export interface BackendVersion {
+  version: string;
+}
 
 /** Typed client of the Taskboard backend's REST API. Errors are application/problem+json. */
 @Injectable({ providedIn: 'root' })
 export class TaskApi {
   private readonly http = inject(HttpClient);
+
+  version(): Observable<BackendVersion> {
+    return this.http.get<BackendVersion>(VERSION_URL);
+  }
 
   /** All tasks, sorted by id. */
   list(): Observable<Task[]> {

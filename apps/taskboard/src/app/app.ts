@@ -1,11 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { interval } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, interval, map } from 'rxjs';
 
 import { Board } from './board/board';
 import { ConfirmDialog } from './confirm-dialog/confirm-dialog';
 import { TaskForm } from './task-form/task-form';
+import { TaskApi } from './tasks/task-api';
 import { Task } from './tasks/task';
 import { TaskStore } from './tasks/task-store';
 
@@ -23,8 +25,10 @@ export const REFRESH_INTERVAL_MS = 10_000;
   styleUrl: './app.scss',
 })
 export class App {
+  private readonly api = inject(TaskApi);
   protected readonly store = inject(TaskStore);
   protected readonly refreshSeconds = REFRESH_INTERVAL_MS / 1000;
+  protected readonly backendVersionLabel = signal('Backend version unavailable');
 
   /** The open task form, for the task to edit or for a new task (null); null when closed. */
   protected readonly editor = signal<{ task: Task | null } | null>(null);
@@ -33,6 +37,14 @@ export class App {
 
   constructor() {
     this.store.refresh();
+    this.api
+      .version()
+      .pipe(
+        map(({ version }) => `Backend version ${version}`),
+        catchError(() => of('Backend version unavailable')),
+        takeUntilDestroyed(),
+      )
+      .subscribe((label) => this.backendVersionLabel.set(label));
     interval(REFRESH_INTERVAL_MS)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.store.refresh());

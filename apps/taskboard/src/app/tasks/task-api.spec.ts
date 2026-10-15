@@ -21,6 +21,15 @@ describe('TaskApi', () => {
 
   afterEach(() => http.verify());
 
+  it('reads the backend version with GET /api/version', () => {
+    let version: string | undefined;
+
+    api.version().subscribe((result) => (version = result.version));
+    http.expectOne({ method: 'GET', url: '/api/version' }).flush({ version: '1.2.3-SNAPSHOT' });
+
+    expect(version).toBe('1.2.3-SNAPSHOT');
+  });
+
   it('lists all tasks with GET /api/tasks', () => {
     const tasks = [aTask({ id: 1 }), aTask({ id: 2, source: 'HOST', hostId: 'H000001001' })];
     let listed: Task[] | undefined;

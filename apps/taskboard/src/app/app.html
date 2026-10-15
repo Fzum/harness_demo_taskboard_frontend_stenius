@@ -61,6 +61,10 @@
   }
 </main>
 
+<footer class="footer">
+  <small>{{ backendVersionLabel() }}</small>
+</footer>
+
 @if (editor(); as open) {
   <app-task-form [task]="open.task" [assignees]="store.assignees()" (closed)="editor.set(null)" />
 }
