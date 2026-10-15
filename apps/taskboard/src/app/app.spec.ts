@@ -30,6 +30,11 @@ describe('App', () => {
     page = fixture.nativeElement;
   }
 
+  function answerVersionUnavailable(): void {
+    http.expectOne({ method: 'GET', url: '/api/version' }).error(new ProgressEvent('error'));
+    fixture.detectChanges();
+  }
+
   /** Answers the board's pending refresh with these tasks. */
   function answerRefresh(tasks: Task[] = boardTasks): void {
     http.expectOne({ method: 'GET', url: '/api/tasks' }).flush(tasks);
@@ -70,6 +75,7 @@ describe('App', () => {
     expect(texts(page, '[role="status"]')).toEqual(['Loading tasks…']);
 
     answerRefresh();
+    answerVersionUnavailable();
 
     expect(page.querySelector('[role="status"]')).toBeNull();
     expect(titlesIn('OPEN')).toEqual(['Check address change', 'Archive closed case file']);
@@ -99,6 +105,7 @@ describe('App', () => {
     vi.useFakeTimers();
     render();
     answerRefresh([aTask({ syncStatus: 'PENDING' })]);
+    answerVersionUnavailable();
     expect(texts(page, '.card__sync')).toEqual(['Pending host sync']);
 
     vi.advanceTimersByTime(REFRESH_INTERVAL_MS);
@@ -111,6 +118,7 @@ describe('App', () => {
   it('refreshes on demand', () => {
     render();
     answerRefresh([]);
+    answerVersionUnavailable();
 
     button(page, 'Refresh').click();
     answerRefresh();
@@ -121,6 +129,7 @@ describe('App', () => {
   it('shows an empty state when there are no tasks', () => {
     render();
     answerRefresh([]);
+    answerVersionUnavailable();
 
     expect(texts(page, '.empty__heading')).toEqual(['No tasks yet']);
   });
@@ -128,6 +137,7 @@ describe('App', () => {
   it('shows a banner while the backend is unreachable and keeps the last known board', () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
 
     button(page, 'Refresh').click();
     failRefresh();
@@ -147,6 +157,7 @@ describe('App', () => {
   it('says so when the backend is unreachable from the start', () => {
     render();
     failRefresh();
+    answerVersionUnavailable();
 
     expect(texts(page, '[role="alert"]')).toEqual([
       'The Taskboard backend is unreachable. The board appears once it answers; it retries every ' +
@@ -159,6 +170,7 @@ describe('App', () => {
   it('creates a task in the dialog and shows it on the board', async () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
 
     button(page, 'New task').click();
     fixture.detectChanges();
@@ -182,6 +194,7 @@ describe('App', () => {
   it('edits a task from its card', async () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
 
     button(cardOf('Send payment reminder'), 'Edit').click();
     fixture.detectChanges();
@@ -202,6 +215,7 @@ describe('App', () => {
   it('deletes a task only after confirmation', () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
 
     button(cardOf('Check address change'), 'Delete').click();
     fixture.detectChanges();
@@ -228,6 +242,7 @@ describe('App', () => {
   it('moves and assigns tasks through the API', () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
     const [checkAddress, , archive] = boardTasks;
 
     find(cardOf('Check address change'), 'button[aria-label="Move to In progress"]').click();
@@ -250,6 +265,7 @@ describe('App', () => {
   it('reports a failed quick action until it is dismissed', () => {
     render();
     answerRefresh();
+    answerVersionUnavailable();
 
     find(cardOf('Send payment reminder'), 'button[aria-label="Move to Done"]').click();
     http

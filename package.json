@@ -8,9 +8,7 @@
     "start:bridge": "ng serve bridge",
     "start:console": "ng serve console",
     "build": "ng build taskboard && ng build bridge && ng build console",
-    "smoke:footer": "node tools/taskboard-footer-smoke.mjs",
     "test": "ng test --watch=false",
-    "test:tools": "node --test tools/*.test.mjs",
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
