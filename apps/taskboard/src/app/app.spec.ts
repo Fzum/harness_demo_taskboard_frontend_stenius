@@ -36,6 +36,16 @@ describe('App', () => {
     fixture.detectChanges();
   }
 
+  function answerVersion(version = '0.0.1-SNAPSHOT'): void {
+    http.expectOne({ method: 'GET', url: '/api/version' }).flush({ version });
+    fixture.detectChanges();
+  }
+
+  function failVersion(): void {
+    http.expectOne({ method: 'GET', url: '/api/version' }).error(new ProgressEvent('error'));
+    fixture.detectChanges();
+  }
+
   function failRefresh(): void {
     http.expectOne({ method: 'GET', url: '/api/tasks' }).error(new ProgressEvent('error'));
     fixture.detectChanges();
@@ -66,6 +76,23 @@ describe('App', () => {
     expect(titlesIn('IN_PROGRESS')).toEqual(['Send payment reminder']);
     expect(titlesIn('DONE')).toEqual(['Correct duplicate booking']);
     expect(textOf(find(page, '.topbar__updated'))).toMatch(/^Updated \d{1,2}:\d{2}:\d{2} [AP]M$/);
+  });
+
+  it('requests the backend version over HTTP and shows it in the footer', () => {
+    render();
+    answerRefresh();
+    answerVersion('1.2.3-SNAPSHOT');
+
+    expect(page.textContent).toContain('Backend version 1.2.3-SNAPSHOT');
+  });
+
+  it('still loads the board and shows a neutral footer label when the version endpoint is unavailable', () => {
+    render();
+    answerRefresh();
+    failVersion();
+
+    expect(titlesIn('OPEN')).toEqual(['Check address change', 'Archive closed case file']);
+    expect(page.textContent).toContain('Backend version unavailable');
   });
 
   it('refreshes every 10 seconds, so that host tasks and sync changes appear by themselves', () => {
