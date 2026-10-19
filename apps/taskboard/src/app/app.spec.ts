@@ -55,6 +55,16 @@ describe('App', () => {
     return texts(find(page, `.column[data-status="${status}"]`), '.card__title');
   }
 
+  it('labels the header refresh button "Reload tasks" instead of "Refresh"', () => {
+    render();
+    answerRefresh();
+
+    const labels = texts(find(page, '.topbar__actions'), 'button');
+
+    expect(labels).toContain('Reload tasks');
+    expect(labels).not.toContain('Refresh');
+  });
+
   it('loads the tasks and shows them on the board', () => {
     render();
     expect(texts(page, '[role="status"]')).toEqual(['Loading tasks…']);
@@ -85,7 +95,7 @@ describe('App', () => {
     render();
     answerRefresh([]);
 
-    button(page, 'Refresh').click();
+    button(page, 'Reload tasks').click();
     answerRefresh();
 
     expect(texts(page, '.card__title')).toHaveLength(4);
@@ -102,7 +112,7 @@ describe('App', () => {
     render();
     answerRefresh();
 
-    button(page, 'Refresh').click();
+    button(page, 'Reload tasks').click();
     failRefresh();
 
     expect(texts(page, '[role="alert"]')).toEqual([

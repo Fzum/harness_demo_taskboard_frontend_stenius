@@ -56,6 +56,14 @@ describe('TaskCard', () => {
       expect(textOf(find(element, '.card__due'))).toBe('Overdue Due Oct 13, 2026');
     });
 
+    it('shows the visible text "Overdue" on an overdue card only', () => {
+      const overdue = card(render(aTask({ dueDate: '2026-10-13' })));
+      const upcoming = card(render(aTask({ dueDate: '2026-10-15' })));
+
+      expect(textOf(find(overdue, '.card'))).toContain('Overdue');
+      expect(textOf(find(upcoming, '.card'))).not.toContain('Overdue');
+    });
+
     it('does not highlight a task due today', () => {
       const element = card(render(aTask({ dueDate: '2026-10-14' })));
 
