@@ -85,7 +85,7 @@ describe('App', () => {
     render();
     answerRefresh([]);
 
-    button(page, 'Refresh').click();
+    button(page, 'Reload tasks').click();
     answerRefresh();
 
     expect(texts(page, '.card__title')).toHaveLength(4);
@@ -102,7 +102,7 @@ describe('App', () => {
     render();
     answerRefresh();
 
-    button(page, 'Refresh').click();
+    button(page, 'Reload tasks').click();
     failRefresh();
 
     expect(texts(page, '[role="alert"]')).toEqual([
