@@ -37,6 +37,17 @@ describe('TaskCard', () => {
     expect(find(element, '.card__due time').getAttribute('datetime')).toBe('2026-10-31');
   });
 
+  it.each([
+    ['HIGH', 'High'],
+    ['MEDIUM', 'Medium'],
+    ['LOW', 'Low'],
+  ] as const)('shows a %s task with the badge %s', (priority, label) => {
+    const badge = find(card(render(aTask({ priority }))), '.card__priority');
+
+    expect(textOf(badge)).toBe(label);
+    expect(badge.getAttribute('data-priority')).toBe(priority);
+  });
+
   it('shows an unassigned task without a description or a due date', () => {
     const element = card(render(aTask({ description: null, assignee: null, dueDate: null })));
 

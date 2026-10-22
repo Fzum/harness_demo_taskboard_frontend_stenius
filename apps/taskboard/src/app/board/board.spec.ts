@@ -36,6 +36,27 @@ describe('Board', () => {
     expect(texts(column(fixture, 'DONE'), '.card__title')).toEqual(['Correct duplicate booking']);
   });
 
+  it('orders each column by priority, then due date (none last), then id', () => {
+    const fixture = render([
+      aTask({ id: 1, title: 'low early', priority: 'LOW', dueDate: '2026-01-01' }),
+      aTask({ id: 2, title: 'medium none', priority: 'MEDIUM', dueDate: null }),
+      aTask({ id: 3, title: 'medium late', priority: 'MEDIUM', dueDate: '2026-12-01' }),
+      aTask({ id: 4, title: 'high none b', priority: 'HIGH', dueDate: null }),
+      aTask({ id: 5, title: 'medium early', priority: 'MEDIUM', dueDate: '2026-02-01' }),
+      aTask({ id: 6, title: 'high none a', priority: 'HIGH', dueDate: null }),
+      aTask({ id: 7, title: 'other column', status: 'DONE', priority: 'LOW' }),
+    ]);
+
+    expect(texts(column(fixture, 'OPEN'), '.card__title')).toEqual([
+      'high none b',
+      'high none a',
+      'medium early',
+      'medium late',
+      'medium none',
+      'low early',
+    ]);
+  });
+
   it('labels each column with its heading', () => {
     const open = column(render(boardTasks), 'OPEN');
 

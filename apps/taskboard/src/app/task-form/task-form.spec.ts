@@ -64,9 +64,33 @@ describe('TaskForm', () => {
         description: null,
         assignee: 'bweber',
         dueDate: '2026-11-30',
+        priority: 'MEDIUM',
       });
       expect(dialog.open).toBe(false);
       expect(closed).toHaveBeenCalledOnce();
+    });
+
+    it('offers High, Medium and Low with Medium preselected', async () => {
+      const { fixture, element } = render();
+      await settle(fixture);
+      const select = find<HTMLSelectElement>(element, '#task-priority');
+
+      expect(texts(select, 'option')).toEqual(['High', 'Medium', 'Low']);
+      expect(select.value).toBe('MEDIUM');
+      expect(textOf(find(element, 'label[for="task-priority"]'))).toBe('Priority');
+    });
+
+    it('creates the task with the chosen priority', async () => {
+      const { fixture, element } = render();
+
+      typeInto(element, '#task-title', 'Urgent thing');
+      typeInto(element, '#task-priority', 'HIGH');
+      button(element, 'Create task').click();
+      const request = http.expectOne({ method: 'POST', url: '/api/tasks' });
+      request.flush(aTask({ priority: 'HIGH' }), { status: 201, statusText: 'Created' });
+      await settle(fixture);
+
+      expect(request.request.body).toMatchObject({ title: 'Urgent thing', priority: 'HIGH' });
     });
 
     it('suggests the assignees on the board', () => {
@@ -159,6 +183,20 @@ describe('TaskForm', () => {
   describe('for an existing task', () => {
     const task = aTask({ status: 'IN_PROGRESS', hostId: 'T000000042' });
 
+    it('starts from the task priority and sends a changed one', async () => {
+      const { fixture, element } = render(aTask({ priority: 'LOW' }));
+      await settle(fixture);
+
+      expect(find<HTMLSelectElement>(element, '#task-priority').value).toBe('LOW');
+      typeInto(element, '#task-priority', 'HIGH');
+      button(element, 'Save changes').click();
+      const request = http.expectOne({ method: 'PUT', url: '/api/tasks/42' });
+      request.flush(aTask({ priority: 'HIGH' }));
+      await settle(fixture);
+
+      expect(request.request.body).toMatchObject({ priority: 'HIGH' });
+    });
+
     it('starts from the task, including its status', async () => {
       const { fixture, element } = render(task);
       // The select takes its value once its options are rendered.
@@ -189,6 +227,7 @@ describe('TaskForm', () => {
         status: 'DONE',
         assignee: null,
         dueDate: '2026-10-31',
+        priority: 'MEDIUM',
       });
       expect(closed).toHaveBeenCalledOnce();
     });

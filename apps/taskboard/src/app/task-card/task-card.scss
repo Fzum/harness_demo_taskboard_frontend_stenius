@@ -39,6 +39,25 @@
     }
   }
 
+  &__priority {
+    font-weight: 700;
+
+    &[data-priority='HIGH'] {
+      --badge-text: #a1170d;
+      --badge-background: #fde3e1;
+    }
+
+    &[data-priority='MEDIUM'] {
+      --badge-text: #7c4a00;
+      --badge-background: #fff1d1;
+    }
+
+    &[data-priority='LOW'] {
+      --badge-text: #3f4b63;
+      --badge-background: #e8ecf3;
+    }
+  }
+
   &__host-key {
     font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     font-weight: 500;

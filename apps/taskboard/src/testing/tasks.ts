@@ -9,6 +9,7 @@ export function aTask(overrides: Partial<Task> = {}): Task {
     status: 'OPEN',
     assignee: 'amueller',
     dueDate: '2026-10-31',
+    priority: 'MEDIUM',
     source: 'TASKBOARD',
     hostId: null,
     syncStatus: 'PENDING',

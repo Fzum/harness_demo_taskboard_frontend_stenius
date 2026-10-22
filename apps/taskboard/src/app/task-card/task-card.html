@@ -7,6 +7,9 @@
   [attr.aria-labelledby]="ids().title"
 >
   <div class="card__badges">
+    <span class="badge card__priority" [attr.data-priority]="task().priority">
+      {{ priorityLabel() }}
+    </span>
     <span class="tooltip">
       <span
         class="badge card__source"
