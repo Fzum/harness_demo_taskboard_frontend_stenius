@@ -13,6 +13,9 @@ export type TaskSource = 'TASKBOARD' | 'HOST';
  */
 export type SyncStatus = 'PENDING' | 'SYNCED' | 'FAILED';
 
+/** How urgent a task is; the board orders each column by it. */
+export type TaskPriority = 'HIGH' | 'MEDIUM' | 'LOW';
+
 export interface Task {
   id: number;
   title: string;
@@ -26,6 +29,7 @@ export interface Task {
   /** The task's key on the host (TSK-ID), for example "H000001001"; null until the host has it. */
   hostId: string | null;
   syncStatus: SyncStatus;
+  priority: TaskPriority;
   /** ISO-8601 UTC instant. */
   createdAt: string;
   /** ISO-8601 UTC instant. */
@@ -38,6 +42,8 @@ export interface NewTask {
   description?: string | null;
   assignee?: string | null;
   dueDate?: string | null;
+  /** The backend uses MEDIUM when it is left out. */
+  priority?: TaskPriority;
 }
 
 /** Body of PUT /api/tasks/{id}: replaces every editable field, null clears one. */
@@ -47,6 +53,8 @@ export interface TaskUpdate {
   status: TaskStatus;
   assignee: string | null;
   dueDate: string | null;
+  /** The backend keeps the task's priority when it is left out. */
+  priority?: TaskPriority;
 }
 
 /** The board's columns, from left to right. */
@@ -57,6 +65,33 @@ export const STATUS_LABELS: Readonly<Record<TaskStatus, string>> = {
   IN_PROGRESS: 'In progress',
   DONE: 'Done',
 };
+
+/** The priorities from most to least urgent, which is the order on the board. */
+export const TASK_PRIORITIES: readonly TaskPriority[] = ['HIGH', 'MEDIUM', 'LOW'];
+
+export const PRIORITY_LABELS: Readonly<Record<TaskPriority, string>> = {
+  HIGH: 'High',
+  MEDIUM: 'Medium',
+  LOW: 'Low',
+};
+
+/** The tasks of a column in board order: priority, due date (none last), then id. */
+export function compareTasks(a: Task, b: Task): number {
+  const byPriority = TASK_PRIORITIES.indexOf(a.priority) - TASK_PRIORITIES.indexOf(b.priority);
+  if (byPriority !== 0) {
+    return byPriority;
+  }
+  if (a.dueDate !== b.dueDate) {
+    if (a.dueDate === null) {
+      return 1;
+    }
+    if (b.dueDate === null) {
+      return -1;
+    }
+    return a.dueDate < b.dueDate ? -1 : 1;
+  }
+  return a.id - b.id;
+}
 
 // Field limits of the host's task record (copybook TSKREC); the backend enforces them as well.
 

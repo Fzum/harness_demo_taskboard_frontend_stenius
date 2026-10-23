@@ -64,9 +64,31 @@ describe('TaskForm', () => {
         description: null,
         assignee: 'bweber',
         dueDate: '2026-11-30',
+        priority: 'MEDIUM',
       });
       expect(dialog.open).toBe(false);
       expect(closed).toHaveBeenCalledOnce();
+    });
+
+    it('offers High, Medium and Low with Medium preselected', async () => {
+      const { fixture, element } = render();
+      await settle(fixture);
+
+      expect(texts(element, '#task-priority option')).toEqual(['High', 'Medium', 'Low']);
+      expect(find<HTMLSelectElement>(element, '#task-priority').value).toBe('MEDIUM');
+    });
+
+    it('sends the chosen priority', async () => {
+      const { fixture, element } = render();
+
+      typeInto(element, '#task-title', 'Urgent call');
+      typeInto(element, '#task-priority', 'HIGH');
+      button(element, 'Create task').click();
+      const request = http.expectOne({ method: 'POST', url: '/api/tasks' });
+      request.flush(aTask({ priority: 'HIGH' }), { status: 201, statusText: 'Created' });
+      await settle(fixture);
+
+      expect(request.request.body).toMatchObject({ priority: 'HIGH' });
     });
 
     it('suggests the assignees on the board', () => {
@@ -172,6 +194,20 @@ describe('TaskForm', () => {
       expect(find<HTMLSelectElement>(element, '#task-status').value).toBe('IN_PROGRESS');
     });
 
+    it("starts from the task's priority and sends a changed one", async () => {
+      const { fixture, element } = render(aTask({ priority: 'LOW' }));
+      await settle(fixture);
+      expect(find<HTMLSelectElement>(element, '#task-priority').value).toBe('LOW');
+
+      typeInto(element, '#task-priority', 'HIGH');
+      button(element, 'Save changes').click();
+      const request = http.expectOne({ method: 'PUT', url: '/api/tasks/42' });
+      request.flush(aTask({ priority: 'HIGH' }));
+      await settle(fixture);
+
+      expect(request.request.body).toMatchObject({ priority: 'HIGH' });
+    });
+
     it('replaces the editable fields, clearing the emptied ones', async () => {
       const { fixture, element, closed } = render(task);
 
@@ -189,6 +225,7 @@ describe('TaskForm', () => {
         status: 'DONE',
         assignee: null,
         dueDate: '2026-10-31',
+        priority: 'MEDIUM',
       });
       expect(closed).toHaveBeenCalledOnce();
     });

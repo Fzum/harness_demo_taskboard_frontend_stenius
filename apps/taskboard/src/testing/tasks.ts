@@ -12,6 +12,7 @@ export function aTask(overrides: Partial<Task> = {}): Task {
     source: 'TASKBOARD',
     hostId: null,
     syncStatus: 'PENDING',
+    priority: 'MEDIUM',
     createdAt: '2026-10-14T08:15:30.123Z',
     updatedAt: '2026-10-14T08:15:30.123Z',
     ...overrides,

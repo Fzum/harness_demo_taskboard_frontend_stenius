@@ -45,6 +45,17 @@ describe('TaskCard', () => {
     expect(element.querySelector('.card__due')).toBeNull();
   });
 
+  it.each([
+    ['HIGH', 'High'],
+    ['MEDIUM', 'Medium'],
+    ['LOW', 'Low'],
+  ] as const)('shows a %s priority as the badge %s', (priority, text) => {
+    const badge = find(card(render(aTask({ priority }))), '.card__priority');
+
+    expect(textOf(badge)).toBe(text);
+    expect(badge.getAttribute('data-priority')).toBe(priority);
+  });
+
   describe('due date', () => {
     beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-14T12:00'), toFake: ['Date'] }));
     afterEach(() => vi.useRealTimers());
