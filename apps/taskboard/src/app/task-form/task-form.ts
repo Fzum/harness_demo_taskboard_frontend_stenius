@@ -27,9 +27,12 @@ import {
   ASSIGNEE_HINT,
   ASSIGNEE_PATTERN,
   DESCRIPTION_MAX_LENGTH,
+  PRIORITY_LABELS,
   STATUS_LABELS,
   Task,
+  TASK_PRIORITIES,
   TASK_STATUSES,
+  TaskPriority,
   TaskStatus,
   TITLE_MAX_LENGTH,
 } from '../tasks/task';
@@ -42,6 +45,7 @@ interface TaskFormModel {
   status: TaskStatus;
   assignee: string;
   dueDate: string;
+  priority: TaskPriority;
 }
 
 /** The field limits of the host record, so that the backend has no reason to reject a task. */
@@ -86,6 +90,11 @@ export class TaskForm {
     label: STATUS_LABELS[status],
   }));
 
+  protected readonly priorities = TASK_PRIORITIES.map((priority) => ({
+    priority,
+    label: PRIORITY_LABELS[priority],
+  }));
+
   private readonly model = linkedSignal<TaskFormModel>(() => {
     const task = this.task();
     return {
@@ -94,6 +103,7 @@ export class TaskForm {
       status: task?.status ?? 'OPEN',
       assignee: task?.assignee ?? '',
       dueDate: task?.dueDate ?? '',
+      priority: task?.priority ?? 'MEDIUM',
     };
   });
   protected readonly taskForm = form(this.model, taskSchema, {
@@ -124,6 +134,7 @@ export class TaskForm {
       description: value.description.trim() || null,
       assignee: value.assignee || null,
       dueDate: value.dueDate || null,
+      priority: value.priority,
     };
     const task = this.task();
     const saved = task
@@ -146,6 +157,7 @@ export class TaskForm {
       status: this.taskForm.status,
       assignee: this.taskForm.assignee,
       dueDate: this.taskForm.dueDate,
+      priority: this.taskForm.priority,
     };
     const fieldErrors = Object.entries(problemDetailsOf(error)?.errors ?? {}).map(
       ([name, message]) => {

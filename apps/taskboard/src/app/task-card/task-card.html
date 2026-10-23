@@ -34,6 +34,10 @@
     </span>
   </div>
 
+  <span class="badge card__priority" [attr.data-priority]="task().priority">{{
+    priorityLabel()
+  }}</span>
+
   <h3 class="card__title" [id]="ids().title">{{ task().title }}</h3>
   @if (task().description; as description) {
     <p class="card__description">{{ description }}</p>

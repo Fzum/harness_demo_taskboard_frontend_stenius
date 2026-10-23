@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { TaskCard } from '../task-card/task-card';
-import { STATUS_LABELS, Task, TASK_STATUSES, TaskStatus } from '../tasks/task';
+import { compareTasks, STATUS_LABELS, Task, TASK_STATUSES, TaskStatus } from '../tasks/task';
 
 export interface TaskMove {
   task: Task;
@@ -50,7 +50,9 @@ export class Board {
     TASK_STATUSES.map((status) => ({
       status,
       label: STATUS_LABELS[status],
-      tasks: this.tasks().filter((task) => task.status === status),
+      tasks: this.tasks()
+        .filter((task) => task.status === status)
+        .sort(compareTasks),
     })),
   );
 

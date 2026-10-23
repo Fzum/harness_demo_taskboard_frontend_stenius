@@ -2,7 +2,14 @@ import { DatePipe, formatDate } from '@angular/common';
 import { Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
 
 import { AssigneePicker } from '../assignee-picker/assignee-picker';
-import { STATUS_LABELS, SyncStatus, Task, TASK_STATUSES, TaskStatus } from '../tasks/task';
+import {
+  PRIORITY_LABELS,
+  STATUS_LABELS,
+  SyncStatus,
+  Task,
+  TASK_STATUSES,
+  TaskStatus,
+} from '../tasks/task';
 
 interface Badge {
   text: string;
@@ -74,6 +81,8 @@ export class TaskCard {
         : 'Created in the Taskboard. The host does not have it yet.',
     };
   });
+
+  protected readonly priorityLabel = computed(() => PRIORITY_LABELS[this.task().priority]);
 
   protected readonly sync = computed(() => SYNC_BADGES[this.task().syncStatus]);
 

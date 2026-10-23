@@ -103,6 +103,25 @@
       </div>
     </div>
 
+    @let priorityError = errorOf(taskForm.priority);
+    <div class="field">
+      <label class="field__label" for="task-priority">Priority</label>
+      <select
+        id="task-priority"
+        class="field__input"
+        [formField]="taskForm.priority"
+        [attr.aria-invalid]="priorityError ? true : null"
+        [attr.aria-describedby]="priorityError ? 'task-priority-error' : null"
+      >
+        @for (option of priorities; track option.priority) {
+          <option [value]="option.priority">{{ option.label }}</option>
+        }
+      </select>
+      @if (priorityError) {
+        <p class="field__error" id="task-priority-error">{{ priorityError }}</p>
+      }
+    </div>
+
     @if (task()) {
       @let statusError = errorOf(taskForm.status);
       <div class="field">

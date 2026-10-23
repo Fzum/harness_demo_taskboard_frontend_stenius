@@ -69,6 +69,25 @@
     }
   }
 
+  &__priority {
+    justify-self: start;
+
+    &[data-priority='HIGH'] {
+      --badge-text: #a1170d;
+      --badge-background: #fde3e1;
+    }
+
+    &[data-priority='MEDIUM'] {
+      --badge-text: #424a53;
+      --badge-background: #eceff3;
+    }
+
+    &[data-priority='LOW'] {
+      --badge-text: #0b5a63;
+      --badge-background: #d9f1f4;
+    }
+  }
+
   &__title {
     font-size: 1.0625rem;
     line-height: 1.35;
